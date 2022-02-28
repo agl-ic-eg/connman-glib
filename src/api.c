@@ -231,6 +231,16 @@ static void connman_manager_signal_callback(GDBusConnection *connection,
 	DEBUG("parameters = %s", g_variant_print(parameters, TRUE));
 #endif
 
+	// Be paranoid to avoid any potential issues from unexpected signals,
+	// as glib seems to do some unexpected reuse of the D-Bus signal
+	// mechanism if there is more than one subscriber in the same process,
+	// and we will see signals we did not register for. :(
+	if (!(g_strcmp0(object_path, "/") == 0 &&
+	      g_strcmp0(interface_name, "net.connman.Manager") == 0)) {
+		// Not an expected signal
+		return;
+	}
+
 	if (!g_strcmp0(signal_name, "TechnologyAdded")) {
 		g_variant_get(parameters, "(&o@a{sv})", &path, &var);
 		basename = connman_strip_path(path);
@@ -311,6 +321,16 @@ static void connman_technology_signal_callback(GDBusConnection *connection,
 	DEBUG("parameters = %s", g_variant_print(parameters, TRUE));
 #endif
 
+	// Be paranoid to avoid any potential issues from unexpected signals,
+	// as glib seems to do some unexpected reuse of the D-Bus signal
+	// mechanism if there is more than one subscriber in the same process,
+	// and we will see signals we did not register for. :(
+	if (!(g_str_has_prefix(object_path, "/net/connman/technology/") &&
+	      g_strcmp0(interface_name, "net.connman.Technology") == 0)) {
+		// Not an expected signal
+		return;
+	}
+
 	// a basename must exist and be at least 1 character wide
 	const gchar *basename = connman_strip_path(object_path);
 	g_assert(basename);
@@ -338,6 +358,16 @@ static void connman_service_signal_callback(GDBusConnection *connection,
 	INFO("signal=%s", signal_name);
 	DEBUG("parameters = %s", g_variant_print(parameters, TRUE));
 #endif
+
+	// Be paranoid to avoid any potential issues from unexpected signals,
+	// as glib seems to do some unexpected reuse of the D-Bus signal
+	// mechanism if there is more than one subscriber in the same process,
+	// and we will see signals we did not register for. :(
+	if (!(g_str_has_prefix(object_path, "/net/connman/service/") &&
+	      g_strcmp0(interface_name, "net.connman.Service") == 0)) {
+		// Not an expected signal
+		return;
+	}
 
 	// a basename must exist and be at least 1 character wide
 	const gchar *basename = connman_strip_path(object_path);
