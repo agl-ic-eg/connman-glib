@@ -65,16 +65,16 @@ struct init_data {
 extern void connman_log(connman_log_level_t level, const char *func, const char *format, ...)
 	__attribute__ ((format (printf, 3, 4)));
 
-#define ERROR(format, ...) \
-	connman_log(CONNMAN_LOG_LEVEL_ERROR, __FUNCTION__, format, ##__VA_ARGS__)
+#define ERROR(...) \
+	((void)0)
 
-#define WARNING(format, ...) \
-	connman_log(CONNMAN_LOG_LEVEL_WARNING, __FUNCTION__, format, ##__VA_ARGS__)
+#define WARNING(...) \
+	((void)0)
 
-#define INFO(format, ...) \
-	connman_log(CONNMAN_LOG_LEVEL_INFO, __FUNCTION__, format, ##__VA_ARGS__)
+#define INFO(...) \
+	((void)0)
 
-#define DEBUG(format, ...) \
-	connman_log(CONNMAN_LOG_LEVEL_DEBUG, __FUNCTION__, format, ##__VA_ARGS__)
+#define DEBUG(...) \
+	((void)0)
 
 #endif // CONNMAN_COMMON_H
